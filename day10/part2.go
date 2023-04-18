@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Part1(raw string) {
+func Part2(raw string) {
 	bots := map[int][]int{}
 	lowToOut := map[int]int{}
 	lowToBot := map[int]int{}
@@ -42,6 +42,7 @@ func Part1(raw string) {
 			}
 		}
 	}
+	res := 1
 	var solve func(bot int)
 	solve = func(bot int) {
 		if len(bots[bot]) != 2 {
@@ -49,10 +50,6 @@ func Part1(raw string) {
 		}
 		sort.Ints(bots[bot])
 		low, high := bots[bot][0], bots[bot][1]
-		if low == 17 && high == 61 {
-			fmt.Println(bot)
-			return
-		}
 		bots[bot] = bots[bot][:0]
 		if nb, ok := lowToBot[bot]; ok {
 			if _, ok := bots[nb]; !ok {
@@ -60,6 +57,8 @@ func Part1(raw string) {
 			}
 			bots[nb] = append(bots[nb], low)
 			solve(nb)
+		} else if out := lowToOut[bot]; out >= 0 && out <= 2 {
+			res *= low
 		}
 		if nb, ok := highToBot[bot]; ok {
 			if _, ok := bots[nb]; !ok {
@@ -67,6 +66,8 @@ func Part1(raw string) {
 			}
 			bots[nb] = append(bots[nb], high)
 			solve(nb)
+		} else if out := highToOut[bot]; out >= 0 && out <= 2 {
+			res *= high
 		}
 	}
 	for k, v := range bots {
@@ -75,4 +76,5 @@ func Part1(raw string) {
 			break
 		}
 	}
+	fmt.Println(res)
 }
