@@ -13,9 +13,8 @@ func Part1(raw string) {
 		r.Value = i
 		r = r.Next()
 	}
-	for r.Next() != r {
+	for ; r.Next() != r; r = r.Next() {
 		r.Unlink(1)
-		r = r.Next()
 	}
 	fmt.Println(r.Value.(int) + 1)
 }
