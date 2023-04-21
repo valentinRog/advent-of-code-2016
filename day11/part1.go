@@ -17,27 +17,23 @@ func Part1(raw string) {
 		for i, item := range arr[:len(arr)-1] {
 			switch {
 			case strings.HasPrefix(arr[i+1], "generator"):
+				generators[item] = len(pos)
 				pos = append(pos, floor)
-				generators[item] = len(pos) - 1
 			case strings.HasPrefix(arr[i+1], "microchip"):
 				item = strings.ReplaceAll(item, "-compatible", "")
+				microchips[item] = len(pos)
 				pos = append(pos, floor)
-				microchips[item] = len(pos) - 1
 			}
 		}
 	}
 
 	valid := func(pos []int) bool {
+	out:
 		for k, v := range microchips {
-			shield := false
 			for k2, v2 := range generators {
 				if k == k2 && pos[v] == pos[v2] {
-					shield = true
-					break
+					continue out
 				}
-			}
-			if shield {
-				continue
 			}
 			for _, v2 := range generators {
 				if pos[v] == pos[v2] {
@@ -77,33 +73,34 @@ func Part1(raw string) {
 		target[i] = 3
 	}
 
+out:
 	for {
 		s := q.Front().Value.(state)
 		q.Remove(q.Front())
-		if reflect.DeepEqual(s.pos, target) {
-			fmt.Println(s.n)
-			break
-		}
 		for _, e := range []int{s.e - 1, s.e + 1} {
 			if e < 0 || e > 3 {
 				continue
 			}
+		i:
 			for i := range s.pos {
 				for j := range s.pos {
-					if s.pos[i] != s.e || s.pos[j] != s.e {
+					if s.pos[i] != s.e {
+						continue i
+					}
+					if s.pos[j] != s.e {
 						continue
 					}
 					pos := make([]int, len(s.pos))
 					copy(pos, s.pos)
 					pos[i] = e
-					if i != j {
-						pos[j] = e
+					pos[j] = e
+					if reflect.DeepEqual(pos, target) {
+						fmt.Println(s.n + 1)
+						break out
 					}
-					if valid(pos) {
-						if _, ok := cache[make_key(pos, e)]; !ok {
-							cache[make_key(pos, e)] = struct{}{}
-							q.PushBack(state{pos, e, s.n + 1})
-						}
+					if _, ok := cache[make_key(pos, e)]; !ok && valid(pos) {
+						cache[make_key(pos, e)] = struct{}{}
+						q.PushBack(state{pos, e, s.n + 1})
 					}
 				}
 			}

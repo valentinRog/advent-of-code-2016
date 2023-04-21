@@ -36,16 +36,12 @@ func Part2(raw string) {
 	pos = append(pos, 0)
 
 	valid := func(pos []int) bool {
+	out:
 		for k, v := range microchips {
-			shield := false
 			for k2, v2 := range generators {
 				if k == k2 && pos[v] == pos[v2] {
-					shield = true
-					break
+					continue out
 				}
-			}
-			if shield {
-				continue
 			}
 			for _, v2 := range generators {
 				if pos[v] == pos[v2] {
@@ -93,26 +89,26 @@ out:
 			if e < 0 || e > 3 {
 				continue
 			}
+		i:
 			for i := range s.pos {
 				for j := range s.pos {
-					if s.pos[i] != s.e || s.pos[j] != s.e {
+					if s.pos[i] != s.e {
+						continue i
+					}
+					if s.pos[j] != s.e {
 						continue
 					}
 					pos := make([]int, len(s.pos))
 					copy(pos, s.pos)
 					pos[i] = e
-					if i != j {
-						pos[j] = e
-					}
+					pos[j] = e
 					if reflect.DeepEqual(pos, target) {
 						fmt.Println(s.n + 1)
 						break out
 					}
-					if valid(pos) {
-						if _, ok := cache[make_key(pos, e)]; !ok {
-							cache[make_key(pos, e)] = struct{}{}
-							q.PushBack(state{pos, e, s.n + 1})
-						}
+					if _, ok := cache[make_key(pos, e)]; !ok && valid(pos) {
+						cache[make_key(pos, e)] = struct{}{}
+						q.PushBack(state{pos, e, s.n + 1})
 					}
 				}
 			}
