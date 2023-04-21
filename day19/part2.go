@@ -10,12 +10,11 @@ func Part2(raw string) {
 	n, _ := strconv.Atoi(raw)
 	l1 := list.New()
 	l2 := list.New()
-	for i := 0; i < n; i++ {
-		if i < n/2 {
-			l1.PushBack(i)
-		} else {
-			l2.PushBack(i)
-		}
+	for i := 0; i < n/2; i++ {
+		l1.PushBack(i)
+	}
+	for i := n / 2; i < n; i++ {
+		l2.PushBack(i)
 	}
 	for l1.Len()+l2.Len() > 1 {
 		l2.Remove(l2.Front())
