@@ -11,5 +11,5 @@ func main() {
 	raw := strings.TrimSpace(string(bytes))
 	raw = strings.ReplaceAll(raw, "\r", "")
 	Part1(raw)
-	// Part2(raw)
+	Part2(raw)
 }
