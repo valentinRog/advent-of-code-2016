@@ -8,14 +8,17 @@ import (
 
 func Part2(raw string) {
 	registers := map[string]int{
-		"a": 0,
+		"a": 7,
 		"b": 0,
 		"c": 1,
 		"d": 0,
 	}
-	lines := strings.Split(raw, "\n")
-	for i := 0; i < len(lines); i++ {
-		arr := strings.Fields(lines[i])
+	arrs := [][]string{}
+	for _, line := range strings.Split(raw, "\n") {
+		arrs = append(arrs, strings.Fields(line))
+	}
+	for i := 0; i < len(arrs); i++ {
+		arr := arrs[i]
 		switch arr[0] {
 		case "cpy":
 			if v, ok := registers[arr[1]]; ok {

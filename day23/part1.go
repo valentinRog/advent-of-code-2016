@@ -13,9 +13,12 @@ func Part1(raw string) {
 		"c": 0,
 		"d": 0,
 	}
-	lines := strings.Split(raw, "\n")
-	for i := 0; i < len(lines); i++ {
-		arr := strings.Fields(lines[i])
+	arrs := [][]string{}
+	for _, line := range strings.Split(raw, "\n") {
+		arrs = append(arrs, strings.Fields(line))
+	}
+	for i := 0; i < len(arrs); i++ {
+		arr := arrs[i]
 		switch arr[0] {
 		case "cpy":
 			if _, ok := registers[arr[2]]; !ok {
@@ -47,19 +50,17 @@ func Part1(raw string) {
 			if !ok {
 				v, _ = strconv.Atoi(arr[1])
 			}
-			if i+v < len(lines) {
-				arr2 := strings.Fields(lines[i+v])
-				switch arr2[0] {
+			if i+v < len(arrs) {
+				switch arrs[i+v][0] {
 				case "inc":
-					arr2[0] = "dec"
+					arrs[i+v][0] = "dec"
 				case "dec", "tgl":
-					arr2[0] = "inc"
+					arrs[i+v][0] = "inc"
 				case "jnz":
-					arr2[0] = "cpy"
+					arrs[i+v][0] = "cpy"
 				case "cpy":
-					arr2[0] = "jnz"
+					arrs[i+v][0] = "jnz"
 				}
-				lines[i+v] = strings.Join(arr2, " ")
 			}
 		}
 	}
