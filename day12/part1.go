@@ -11,6 +11,7 @@ func Part1(raw string) {
 		"a": 0,
 		"b": 0,
 		"c": 0,
+		"d": 0,
 	}
 	lines := strings.Split(raw, "\n")
 	for i := 0; i < len(lines); i++ {
