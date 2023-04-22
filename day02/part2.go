@@ -21,36 +21,19 @@ func Part2(raw string) {
 		3 + 3i: "C",
 		2 + 4i: "D",
 	}
-	update := map[string]func(complex128) complex128{
-		"U": func(p complex128) complex128 {
-			if _, ok := pad[p-1i]; ok {
-				return p - 1i
-			}
-			return p
-		},
-		"D": func(p complex128) complex128 {
-			if _, ok := pad[p+1i]; ok {
-				return p + 1i
-			}
-			return p
-		},
-		"L": func(p complex128) complex128 {
-			if _, ok := pad[p-1]; ok {
-				return p - 1
-			}
-			return p
-		},
-		"R": func(p complex128) complex128 {
-			if _, ok := pad[p+1]; ok {
-				return p + 1
-			}
-			return p
-		},
+	ops := map[rune]complex128{
+		'U': -1i,
+		'D': 1i,
+		'L': -1,
+		'R': 1,
 	}
-	p := 2 + 0i
+	p := 1 + 1i
 	for _, line := range strings.Split(raw, "\n") {
 		for _, c := range line {
-			p = update[string(c)](p)
+			np := p + ops[c]
+			if _, ok := pad[np]; ok {
+				p = np
+			}
 		}
 		fmt.Print(pad[p])
 	}
